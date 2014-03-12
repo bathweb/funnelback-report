@@ -54,7 +54,6 @@ summary_table = doc.css('div.summary_report table')
 # puts summary_table
 
 
-# get '/' do
-#     {:chart_url => "chart.png"}
-#     erb:index
-# end
+def fetch_funnelback_content(url, output_filename)
+
+end	
