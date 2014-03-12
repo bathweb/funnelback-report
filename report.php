@@ -6,7 +6,9 @@
 </head>
 <body>
     <h1>Search report for blah</h1>
-    <?php include("chart.png"); ?>
+    <?php if (file_exists("usage-summary-chart.png")) { ?>
+        <img src="chart.png">
+    <?php } ?>
 
 </body>
 </html>
