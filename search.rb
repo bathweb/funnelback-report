@@ -7,11 +7,11 @@ require 'open-uri'
 # require 'sinatra'
 
 # Set up HTTP client to get report page and get past HTTP Auth
-http = Net::HTTP.new("bulgaria.bath.ac.uk",8443)
+http = Net::HTTP.new(ENV['FUNNELBACK_URL'],8443)
 req = Net::HTTP::Get.new("/search/admin/analytics/Dashboard?atab=Analyse&collection=website")
 http.use_ssl = true
 http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-req.basic_auth ENV['FUNNELBACK_USER'], ENV['FUNNELBACK_PW']
+req.basic_auth(ENV['FUNNELBACK_USERNAME'], ENV['FUNNELBACK_PASSWORD'])
 response = http.request(req)
 
 # Save to disk so that Nokogiri can view it
