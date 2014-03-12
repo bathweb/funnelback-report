@@ -10,8 +10,8 @@
         <img src="assets/usage-summary-chart.png">
     <?php } ?>
 
-    <?php if (file_exists("assets/summary-table.html")) { 
-        file_get_contents("assets/summary-table.html");
+    <?php if (file_exists("assets/summary-table.html")) {
+        echo file_get_contents("assets/summary-table.html");
     } ?>
 
 </body>

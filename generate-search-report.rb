@@ -53,7 +53,7 @@ report_page.close
 # Summary
 summary_table = doc.css('div.summary_report table')
 puts summary_table
-open("assets/sumary-table.html", "wb") { |file|
+open("assets/summary-table.html", "wb") { |file|
     file.write(summary_table)
 }
 
