@@ -2,10 +2,10 @@
 
 <html>
 <head>
-    <title></title>
+    <title>Funnelback search report</title>
 </head>
 <body>
-    <h1>Search report for Q1 2014</h1>
+    <h1>Funnelback search report</h1>
     <?php if (file_exists("assets/usage-summary-chart.png")) { ?>
         <img src="assets/usage-summary-chart.png">
     <?php } ?>
