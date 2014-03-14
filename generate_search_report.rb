@@ -10,11 +10,17 @@ require 'open-uri'
 class GenerateFunnelbackReport
 
     FUNNELBACK_REPORT_HTML = "report.html"
-    MONTHLY_USAGE_FILENAME = "monthly-usage-table.html"
     USAGE_CHART_HTML = "usage-summary-chart.html"
-    USAGE_CHART = "usage-summary-chart.png"
+
+    attr_reader :monthly_usage_filename
+    attr_reader :usage_chart_filename
+    attr_reader :output_location
 
     def initialize(output_location)
+
+        @monthly_usage_filename = "monthly-usage-table.html"
+        @usage_chart_filename = "usage-summary-chart.png"
+
         if !output_location.end_with? "/"
             output_location = output_location + "/"
         end
@@ -29,22 +35,15 @@ class GenerateFunnelbackReport
         @http = Net::HTTP.new(ENV['FUNNELBACK_URL'],8443)
         @http.use_ssl = true
         @http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    end
 
-    def get_monthly_usage_filename
-        MONTHLY_USAGE_FILENAME
-    end
-
-    def get_usage_chart_filename
-        USAGE_CHART
     end
 
     def fetch_monthly_usage(report_url)
 
-        self.fetch_funnelback_content(report_url, MONTHLY_USAGE_FILENAME)
+        self.fetch_funnelback_content(report_url, monthly_usage_filename)
 
         monthly_usage_table = @doc.css('div.summary_report table')[0]
-        open(@output_location + MONTHLY_USAGE_FILENAME, "wb") { |file|
+        open(@output_location + monthly_usage_filename, "wb") { |file|
             file.write(monthly_usage_table)
         }
 
@@ -60,7 +59,7 @@ class GenerateFunnelbackReport
         req.basic_auth ENV['FUNNELBACK_USERNAME'], ENV['FUNNELBACK_PASSWORD']
         response = @http.request(req)
 
-        open(@output_location + USAGE_CHART, "wb") { |file|
+        open(@output_location + usage_chart_filename, "wb") { |file|
             file.write(response.body)
         }
 
