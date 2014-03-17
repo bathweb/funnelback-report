@@ -12,12 +12,14 @@ class GenerateFunnelbackReport
     FUNNELBACK_REPORT_HTML = "report.html"
     USAGE_CHART_HTML = "usage-summary-chart.html"
 
+    attr_reader :all_report_filename
     attr_reader :monthly_usage_filename
     attr_reader :usage_chart_filename
     attr_reader :output_location
 
     def initialize(output_location)
 
+        @all_report_filename = "all_report.html"
         @monthly_usage_filename = "monthly-usage-table.html"
         @usage_chart_filename = "usage-summary-chart.png"
 
@@ -38,12 +40,32 @@ class GenerateFunnelbackReport
 
     end
 
+    def alter_image_paths
+        images = @doc.css('img')
+        images.each { |img|
+            img['src'] = img['src'].gsub(/..\/images\/(.*)/, "images/\\1")
+        }
+    end
+
+    def fetch_all_report(report_url)
+        #TODO this might not be what we want but gets us all the content in one shot
+        self.fetch_funnelback_content(report_url, @all_report_filename)
+        alter_image_paths
+
+        all_report_div = @doc.css('div.report')
+        open(@output_location + @all_report_filename, "wb") { |file|
+            file.write(all_report_div)
+        }
+    end
+
     def fetch_monthly_usage(report_url)
 
-        self.fetch_funnelback_content(report_url, monthly_usage_filename)
+        self.fetch_funnelback_content(report_url, @monthly_usage_filename)
+
+        alter_image_paths
 
         monthly_usage_table = @doc.css('div.summary_report table')[0]
-        open(@output_location + monthly_usage_filename, "wb") { |file|
+        open(@output_location + @monthly_usage_filename, "wb") { |file|
             file.write(monthly_usage_table)
         }
 
@@ -83,6 +105,15 @@ class GenerateFunnelbackReport
 
     end
 
+    private :alter_image_paths
+
 end
 
 
+@generator = GenerateFunnelbackReport.new("report")
+
+@generator.fetch_all_report("/search/admin/analytics/Dashboard?collection=website&time=tq&timeframe=day&startDate=20131212&endDate=20140312")
+
+@generator.fetch_monthly_usage("/search/admin/analytics/Dashboard?collection=website&time=tq&timeframe=day&startDate=20131212&endDate=20140312")
+
+@generator.fetch_usage_chart("/search/admin/analytics/Dashboard?startDate=20140101T000000&endDate=20140401T000000&time=p&timeframe=quarter&collection=website&profile=&from=outliers&r=SUMMARY")

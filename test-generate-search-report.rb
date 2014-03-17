@@ -1,6 +1,7 @@
 require_relative 'generate_search_report'
 require 'minitest/autorun'
 require 'fileutils'
+require 'nokogiri'
 
 
 class TestGenerateFunnelbackReport < MiniTest::Unit::TestCase
@@ -16,6 +17,23 @@ class TestGenerateFunnelbackReport < MiniTest::Unit::TestCase
 
   def teardown
     FileUtils.rm_r(@generator.output_location)
+  end
+
+  def test_image_paths_alter
+    # Tests that paths have been changed from "../images" to "images"
+    @generator.fetch_monthly_usage(@funnelback_quarterly_report_url)
+    report_page = File.open(@generator.output_location + @generator.monthly_usage_filename)
+    doc = Nokogiri::HTML(report_page)
+    report_page.close
+    assert(doc)
+    image_path = doc.css('img')[0]['src']
+    assert(image_path, "Didn't find an img tag")
+    assert(image_path.match(/^images/), "Img src path isn't right")
+  end
+
+  def test_all_report_exists
+    @generator.fetch_all_report(@funnelback_quarterly_report_url)
+    assert(File.exists?(@generator.output_location + "/" + @generator.all_report_filename))
   end
 
   def test_monthly_usage_exists

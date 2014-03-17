@@ -6,12 +6,16 @@
 </head>
 <body>
     <h1>Funnelback search report</h1>
-    <?php if (file_exists("assets/usage-summary-chart.png")) { ?>
-        <img src="assets/usage-summary-chart.png">
+    <?php if (file_exists("report/usage-summary-chart.png")) { ?>
+        <img src="report/usage-summary-chart.png">
     <?php } ?>
 
-    <?php if (file_exists("assets/summary-table.html")) {
-        echo file_get_contents("assets/summary-table.html");
+    <?php if (file_exists("report/monthly-usage-table.html")) {
+        echo file_get_contents("report/monthly-usage-table.html");
+    } ?>
+
+    <?php if (file_exists("report/all_report.html")) {
+        echo file_get_contents("report/all_report.html");
     } ?>
 
 </body>
