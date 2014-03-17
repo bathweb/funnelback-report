@@ -36,7 +36,7 @@ class GenerateFunnelbackReport
 
         @output_location = "report" + output_location
         if !File.exists?(@output_location)
-            FileUtils.mkdir(@output_location)
+            FileUtils.mkdir_p(@output_location)
         end
 
         # Set up HTTP client to get report page and get past HTTP Auth
