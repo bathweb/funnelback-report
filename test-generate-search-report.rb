@@ -11,6 +11,7 @@ class TestGenerateFunnelbackReport < MiniTest::Unit::TestCase
     # TODO this would be better if the URL was hidden in the initialiser, and took date range
     @funnelback_quarterly_report_url = "/search/admin/analytics/Dashboard?collection=website&time=tq&timeframe=day&startDate=20131212&endDate=20140312"
     @funnelback_top_queries_chart_url = "/search/admin/analytics/Dashboard?startDate=20140101T000000&endDate=20140401T000000&time=p&timeframe=quarter&collection=website&profile=&from=outliers&r=SUMMARY"
+    @funnelback_queries_per_hour_chart_url = "/search/admin/analytics/Dashboard?collection=website&time=l90d&timeframe=day&startDate=20131217&endDate=20140317&r=QUERIES_PER_HOUR"
     @generator = GenerateFunnelbackReport.new("testoutput")
     # should probably check that output_location is empty
   end
@@ -36,6 +37,17 @@ class TestGenerateFunnelbackReport < MiniTest::Unit::TestCase
     assert(File.exists?(@generator.output_location + "/" + @generator.all_report_filename))
   end
 
+  def test_remove_more_links
+    @generator.fetch_all_report(@funnelback_quarterly_report_url)
+    report_page = File.open(@generator.output_location + @generator.all_report_filename)
+    doc = Nokogiri::HTML(report_page)
+    report_page.close
+    assert(doc)
+    more_links = doc.css('a.more_link')
+    puts more_links
+    assert(more_links.count == 0, "There should be no 'more' links, but I found some")
+  end
+
   def test_monthly_usage_exists
     @generator.fetch_monthly_usage(@funnelback_quarterly_report_url)
     assert(File.exists?(@generator.output_location + "/" + @generator.monthly_usage_filename))
@@ -44,6 +56,11 @@ class TestGenerateFunnelbackReport < MiniTest::Unit::TestCase
   def test_usage_chart_exists
     @generator.fetch_usage_chart(@funnelback_top_queries_chart_url)
     assert(File.exists?(@generator.output_location + "/" + @generator.usage_chart_filename))
+  end
+
+  def test_queries_per_hour_chart_exists
+    @generator.fetch_queries_per_hour_chart(@funnelback_queries_per_hour_chart_url)
+    assert(File.exists?(@generator.output_location + "/" + @generator.queries_per_hour_filename))
   end
 
   # def test_top_queries_chart_exists
