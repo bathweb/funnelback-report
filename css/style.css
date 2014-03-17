@@ -1,0 +1,91 @@
+/*---------------------------------
+    IMPORTS
+-----------------------------------*/
+@import url(http://fonts.googleapis.com/css?family=Arimo:400,700);
+
+/*---------------------------------
+    OVERRIDES
+-----------------------------------*/
+h1,h2,h3,h4,h5,h6 {
+  font-family: "Trebuchet Ms", arial, verdana, sans-serif;
+}
+
+thead th,
+tbody th {
+  font-family: "Trebuchet Ms", arial, verdana, sans-serif;
+}
+
+button,
+.btn,
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  font-family: "Trebuchet Ms", arial, verdana, sans-serif;
+}
+
+.menu {
+  font-family: "Trebuchet Ms", arial, verdana, sans-serif;
+}
+
+blockquote {
+  font-family: "Trebuchet Ms", arial, verdana, sans-serif;
+}
+
+/*---------------------------------
+    LAYOUT
+-----------------------------------*/
+body {
+  margin: 0;
+  padding: 0;
+  color: #000;
+  background: #efefef url(http://www.bath.ac.uk/common/images/style/body_bgInternal.gif) repeat center top;
+  font: normal 0.9em/150% 'Arimo', "Trebuchet MS", arial, verdana, sans-serif;
+  text-shadow: 0 0 1px transparent; /* google font pixelation fix */
+}
+
+.wrap {
+  width: 960px;
+  background: #fff;
+  margin: 30px auto;
+  padding: 0;
+  border: 1px solid #ccc;
+}
+
+.column .inner {
+  padding: 0 22px;
+}
+
+.output {
+  height: 600px;
+  width: 900px;
+}
+
+.url {
+  width: 292px;
+  font-family: monospace;
+}
+
+.generateButton {
+  width: 216px;
+}
+
+label {
+  display: block;
+}
+
+.monospace {
+  font-family: monospace;
+}
+
+.details {
+  float: right;
+  padding-top: 18px;
+}
+
+.percent {
+  width: 300px;
+}
+
+.Shape {
+  display: none;
+}
