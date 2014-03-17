@@ -25,18 +25,23 @@ class GenerateFunnelbackReport
         @usage_chart_filename = "usage-summary-chart.png"
         @queries_per_hour_filename = "queries-per-hour.png"
 
+        # inefficient way of adding / to both ends
         if !output_location.end_with? "/"
             output_location = output_location + "/"
         end
 
-        @output_location = output_location
+        if !output_location.start_with? "/"
+            output_location = "/" + output_location
+        end
+
+        @output_location = "report" + output_location
         if !File.exists?(@output_location)
             FileUtils.mkdir(@output_location)
         end
 
         # Set up HTTP client to get report page and get past HTTP Auth
-        @http = Net::HTTP.new(ENV['FUNNELBACK_URL'],8443)
-        @http = Net::HTTP.new(ENV['FUNNELBACK_URL'],8443)
+        @http = Net::HTTP.new(ENV['FUNNELBACK_URL'], 8443)
+        @http = Net::HTTP.new(ENV['FUNNELBACK_URL'], 8443)
         @http.use_ssl = true
         @http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
@@ -141,12 +146,15 @@ class GenerateFunnelbackReport
 end
 
 
-@generator = GenerateFunnelbackReport.new("report")
+start_date = "20131212"
+end_date = "20140312"
 
-@generator.fetch_all_report("/search/admin/analytics/Dashboard?collection=website&time=tq&timeframe=day&startDate=20131212&endDate=20140312")
+@generator = GenerateFunnelbackReport.new(start_date+"-"+end_date)
 
-@generator.fetch_monthly_usage("/search/admin/analytics/Dashboard?collection=website&time=tq&timeframe=day&startDate=20131212&endDate=20140312")
+@generator.fetch_all_report("/search/admin/analytics/Dashboard?collection=website&time=tq&timeframe=day&startDate=#{start_date}&endDate=#{end_date}")
 
-@generator.fetch_usage_chart("/search/admin/analytics/Dashboard?startDate=20140101T000000&endDate=20140401T000000&time=p&timeframe=quarter&collection=website&profile=&from=outliers&r=SUMMARY")
+@generator.fetch_monthly_usage("/search/admin/analytics/Dashboard?collection=website&time=tq&timeframe=day&startDate=#{start_date}&endDate=#{end_date}")
 
-@generator.fetch_queries_per_hour_chart("/search/admin/analytics/Dashboard?collection=website&time=l90d&timeframe=day&startDate=20131217&endDate=20140317&r=QUERIES_PER_HOUR")
+@generator.fetch_usage_chart("/search/admin/analytics/Dashboard?startDate=#{start_date}T000000&endDate=#{end_date}T000000&time=p&timeframe=quarter&collection=website&profile=&from=outliers&r=SUMMARY")
+
+@generator.fetch_queries_per_hour_chart("/search/admin/analytics/Dashboard?collection=website&time=l90d&timeframe=day&startDate=#{start_date}&endDate=#{end_date}&r=QUERIES_PER_HOUR")
