@@ -34,7 +34,7 @@ class GenerateFunnelbackReport
             output_location = "/" + output_location
         end
 
-        @output_location = "report" + output_location
+        @output_location = "report/reports" + output_location
         if !File.exists?(@output_location)
             FileUtils.mkdir_p(@output_location)
         end

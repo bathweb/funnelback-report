@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>
-            Stats for www.bath.ac.uk/<?= $url ?>
+        <title>Stats for www.bath.ac.uk
         </title>
         <meta charset="UTF-8">
         <meta name="description" content="A script to get statistics about internal website and output them in wiki markup" />
@@ -29,20 +28,35 @@
         <div class="wrap clearfix">
 
             <div class="col_12">
-                <h1>Funnelback search report</h1>
-                <?php if (file_exists("report/usage-summary-chart.png")) { ?>
-                    <img src="report/usage-summary-chart.png" width="100%">
-                <?php } ?>
+                <h1>Funnelback search report ALPHA</h1>
+                <?php
+                    if (!isset($_GET["reportname"])) {
+                        $reports = scandir('reports');
 
-                <?php /*if (file_exists("report/monthly-usage-table.html")) {
-                    echo file_get_contents("report/monthly-usage-table.html");
-                }*/ ?>
+                        foreach ($reports as $reportdir) {
+                            if(strpos($reportdir, ".")===FALSE) {
+                                print("<li><a href='index.php?reportname=".$reportdir."'>".$reportdir."</a></li>");
+                            }
+                        }
 
-                <?php if (file_exists("report/all_report.html")) {
-                    echo file_get_contents("report/all_report.html");
-                } ?>
+                    } else {
+                        $reportname = $_GET["reportname"];
 
-            </div>
+                        if (dirname($reportname) != '.') die ('Directory traversal is not permitted');
 
-</body>
+                        if (file_exists("reports/".$reportname."/usage-summary-chart.png")) {
+                            echo("<img src='reports/".$reportname."/usage-summary-chart.png' width='100%''>");
+                        }
+
+                        if (file_exists("reports/".$reportname."/all_report.html")) {
+                            echo(file_get_contents("reports/".$reportname."/all_report.html"));
+                        }
+                    }
+
+                ?>
+
+            </div> <!-- /col_12 -->
+        </div> <!-- /wrap -->
+    </body>
 </html>
+
